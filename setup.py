@@ -40,6 +40,6 @@ setup(
         'datakit.plugins': []
     },
     test_suite='tests',
-    tests_require=['pytest', 'tox'],
+    tests_require=['pytest', 'pytest-catchlog', 'tox'],
     zip_safe=False,
 )
