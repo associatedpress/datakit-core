@@ -35,7 +35,7 @@ setup(
     install_requires=['cliff'],
     entry_points={
         'console_scripts': [
-            'datakit=datakit.cli.main:main',
+            'datakit=datakit.main:main',
         ],
         'datakit.plugins': []
     },
