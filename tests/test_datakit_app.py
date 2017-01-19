@@ -1,15 +1,15 @@
 
-from datakit.main import Datakit
+from datakit.main import main as dk_main
 
 
-def test_interactive_mode_override(caplog):
+def test_interactive_mode_override(capsys):
     """
-    Datakit should short-circuit Cliff's potentially confusing
-    default behavior of dropping into interactive
-    mode when no command-line arguments are specified.
+    Datakit should default to displaying simple help text
+    when no command line arguments are supplied.
+
+    This short-circuits Cliff's potentially confusing
+    default behavior of dropping into interactive mode.
     """
-    app = Datakit()
-    app.run([''])
-    msg = "You must supply a command, or try the --help flag."
-    assert app.interactive_mode == False
-    assert msg in caplog.text
+    dk_main([])
+    out, err = capsys.readouterr()
+    assert 'You must invoke a command' in out

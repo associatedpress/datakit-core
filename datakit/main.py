@@ -14,15 +14,13 @@ class Datakit(App):
             deferred_help=True,
             )
 
-    def initialize_app(self, argv):
-        # Disable interactive mode
-        self.interactive_mode = False
-        self.LOG.info('You must supply a command, or try the --help flag.')
-
 
 def main(argv=sys.argv[1:]):
-    myapp = Datakit()
-    return myapp.run(argv)
+    if len(argv) == 0:
+        print("You must invoke a command, or try --help")
+    else:
+        myapp = Datakit()
+        return myapp.run(argv)
 
 
 if __name__ == '__main__':
