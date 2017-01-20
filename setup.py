@@ -26,10 +26,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Environment :: Console',
     ],
-    packages=[
-        'datakit',
-        'datakit.cli',
-    ],
+    packages=['datakit'],
     package_dir={'datakit': 'datakit'},
     include_package_data=True,
     install_requires=['cliff'],
