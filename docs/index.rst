@@ -10,9 +10,8 @@ Contents:
    :maxdepth: 2
 
    readme
-   installation
-   usage
    developers
+   authors
 
 Indices and tables
 ==================

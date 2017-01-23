@@ -9,27 +9,27 @@ Overview
 
 Datakit is a light-weight framework for creating custom data science workflows.
 
-It relies on the cliff_ command-line toolkit to provide an extensible system for customized plugins
-tailored to a given person or organization's workflow.
+It relies on the cliff_ command-line toolkit to provide an extensible system of plugins
+to support custom workflows.
 
-Get Started!
-------------
+Core development
+----------------
 
-Here's how to set up `datakit` for local development.
+Here's how to set up Datakit for local development.
 
 1. Install Python 3.5 using pyenv_ and pyenv-virtualenv_::
 
     $ pyenv install 3.5.1
 
-2. Clone `datakit`::
+2. Clone `datakit-core`::
 
-   $ git clone git@ctcinteract-svn01.ap.org:datakit-core.git
+   $ git clone git@github.com:associatedpress/datakit-core.git
 
-3. Create and activiate a virtual environment `datakit`::
+3. Create and activate a virtual environment::
 
-    $ pyenv virtualenv datakit
-    $ pyenv activate datakit
-    $ cd datakit/
+    $ pyenv virtualenv datakit-core
+    $ pyenv activate datakit-core
+    $ cd datakit-core/
 
 4. Install dependencies::
 
@@ -42,21 +42,28 @@ Here's how to set up `datakit` for local development.
     $ python setup.py test
     $ tox
 
-Creating plugins
-~~~~~~~~~~~~~~~~
 
-A typical plugin should implement cliff_'s *entry points* strategy by defining command classes that are exposed under a sensible,
+
+.. _creating-plugins:
+
+Creating plugins
+----------------
+
+Overview
+~~~~~~~~
+
+A typical plugin should apply the `entry points`_ strategy by defining command classes that are exposed under a sensible,
 unique namespace. For example, a plugin to push and pull data between a local dev machine and an S3 bucket might 
 be invoked as below::
 
-    $ datakit data:push data/
+    $ datakit data:push
 
 Correctly configred plugins are installed using standard Python package installation techniques. For example,
 to install a plugin called *datakit-data*::
 
     $ pip install datakit-data
 
-The cliff documentation details how to use the entry points strategy in a plugin,
+The cliff documentation details how to use `entry points`_ in a plugin,
 and contains a `demo app <http://docs.openstack.org/developer/cliff/demoapp.html>`_ for a simple plugin.
 
 Datait plugins should have the following structure::
@@ -78,11 +85,58 @@ Datait plugins should have the following structure::
     ├── test-requirements.txt
     └── tox.ini
 
-* *setup.py* should use *entry points* strategy
-* *plugin_name/\_\_init_\_\.py* imports all command classes to simplify namespace
+Most significantly, to make a custom command available to the *datakit* command-line tool,
+you must expose it in the plugin's *setup.py*.
 
+Plugin configurations
+~~~~~~~~~~~~~~~~~~~~~
+
+Datakit uses a home directory to stash plugin configuration.
+
+By default, this directory is set to :code:`~/.datakit`. It can be customized
+by setting the :code:`DATAKIT_HOME` environment variable.
+
+Plugins should store configuration files under a directory
+that matches the name of the plugin's repo or package.
+
+For example, the *datakit-data* plugin would store configs in::
+
+  ~/.datakit/plugins/datakit-data/config.json
+
+
+Example Plugin
+~~~~~~~~~~~~~~
+
+Let's say we have a *datakit-data* plugin with the below (simplified) file structure::
+
+    datakit-data
+    ├── setup.py
+    ├── datakit_data
+    │   ├── __init__.py
+    │   ├── push.py # Contains a Push class to push data to S3
+    │   ├── pull.py # contains a Pull class to pull down data from S3
+
+To expose the *push* and *pull* commands to *datakit*, you would need to
+configure the `entry points`_ variable in *setup.py* as below:
+
+  .. code:: python
+
+      ....
+       entry_points={
+          'datakit.plugins': [
+            'data:push= datakit_data.push:Push',
+            'data:pull= datakit_data.pull:Pull',
+          ]
+      }
+      ....
+
+After installing the plugin, Datakit can discover and invoke these new commands::
+
+  $ datakit data:push
+  $ datakit data:pull
 
 .. _cliff: http://docs.openstack.org/developer/cliff/
+.. _entry points: https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points
 .. _pyenv: https://github.com/yyuu/pyenv#installation
 .. _pyenv-virtualenv: https://github.com/yyuu/pyenv-virtualenv
 .. _tox: http://codespeak.net/tox
