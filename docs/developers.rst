@@ -52,19 +52,28 @@ Creating plugins
 Overview
 ~~~~~~~~
 
-A typical plugin should apply the `entry points`_ strategy by defining command classes that are exposed under a sensible,
-unique namespace. For example, a plugin to push and pull data between a local dev machine and an S3 bucket might 
-be invoked as below::
+A typical plugin should apply the `entry points`_ strategy by defining `Cliff command classes`_ that are exposed under a sensible,
+unique namespace in the plugin's *setup.py*.
 
-    $ datakit data:push
+This allows Datakit plugins to be easily installed using standard Python package 
+installation techniques.
 
-Correctly configred plugins are installed using standard Python package installation techniques. For example,
-to install a plugin called *datakit-data*::
+For example, to install a plugin called *datakit-data*::
 
     $ pip install datakit-data
 
+The `entry points`_ strategy lets Datakit easily discover and invoke plugin commands::
+
+    $ datakit data:push
+    $ datakit data:pull
+
 The cliff documentation details how to use `entry points`_ in a plugin,
 and contains a `demo app <http://docs.openstack.org/developer/cliff/demoapp.html>`_ for a simple plugin.
+
+You can also check out our :ref:`example-plugin` below for the basics of wiring up a plugin.
+
+Plugin structure
+~~~~~~~~~~~~~~~~
 
 Datait plugins should have the following structure::
 
@@ -86,7 +95,7 @@ Datait plugins should have the following structure::
     └── tox.ini
 
 Most significantly, to make a custom command available to the *datakit* command-line tool,
-you must expose it in the plugin's *setup.py*.
+you must expose it in the plugin's *setup.py*. See :ref:`example-plugin` for details.
 
 Plugin configurations
 ~~~~~~~~~~~~~~~~~~~~~
@@ -103,6 +112,8 @@ For example, the *datakit-data* plugin would store configs in::
 
   ~/.datakit/plugins/datakit-data/config.json
 
+
+.. _example-plugin:
 
 Example Plugin
 ~~~~~~~~~~~~~~
@@ -136,6 +147,7 @@ After installing the plugin, Datakit can discover and invoke these new commands:
   $ datakit data:pull
 
 .. _cliff: http://docs.openstack.org/developer/cliff/
+.. _Cliff command classes: http://docs.openstack.org/developer/cliff/classes.html#cliff.command.Command
 .. _entry points: https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points
 .. _pyenv: https://github.com/yyuu/pyenv#installation
 .. _pyenv-virtualenv: https://github.com/yyuu/pyenv-virtualenv
