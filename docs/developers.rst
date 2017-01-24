@@ -9,7 +9,7 @@ Overview
 
 Datakit is a light-weight framework for creating custom data science workflows.
 
-It relies on the cliff_ command-line toolkit to provide an extensible system of plugins
+It relies on the Cliff_ command-line toolkit to provide an extensible system of plugins
 to support custom workflows.
 
 Core development
@@ -52,8 +52,8 @@ Creating plugins
 Overview
 ~~~~~~~~
 
-A typical plugin should apply the `entry points`_ strategy by defining `Cliff command classes`_ that are exposed under a sensible,
-unique namespace in the plugin's *setup.py*.
+A typical plugin should apply the `entry points`_ strategy by defining `Cliff command classes`_ that are 
+linked to a unique plugin name and action in the plugin's *setup.py*. [1]_
 
 This allows Datakit plugins to be easily installed using standard Python package 
 installation techniques.
@@ -67,7 +67,7 @@ The `entry points`_ strategy lets Datakit easily discover and invoke plugin comm
     $ datakit data:push
     $ datakit data:pull
 
-The cliff documentation details how to use `entry points`_ in a plugin,
+The Cliff_ documentation details how to use `entry points`_ in a plugin,
 and contains a `demo app <http://docs.openstack.org/developer/cliff/demoapp.html>`_ for a simple plugin.
 
 You can also check out our :ref:`example-plugin` below for the basics of wiring up a plugin.
@@ -94,7 +94,7 @@ Datait plugins should have the following structure::
     ├── test-requirements.txt
     └── tox.ini
 
-Most significantly, to make a custom command available to the *datakit* command-line tool,
+Most importantly, to make a custom command available to the *datakit* command-line tool,
 you must expose it in the plugin's *setup.py*. See :ref:`example-plugin` for details.
 
 Plugin configurations
@@ -127,7 +127,7 @@ Let's say we have a *datakit-data* plugin with the below (simplified) file struc
     │   ├── push.py # Contains a Push class to push data to S3
     │   ├── pull.py # contains a Pull class to pull down data from S3
 
-To expose the *push* and *pull* commands to *datakit*, you would need to
+To expose the *push* and *pull* commands to *datakit*, you would
 configure the `entry points`_ variable in *setup.py* as below:
 
   .. code:: python
@@ -146,9 +146,22 @@ After installing the plugin, Datakit can discover and invoke these new commands:
   $ datakit data:push
   $ datakit data:pull
 
-.. _cliff: http://docs.openstack.org/developer/cliff/
+Testing
+~~~~~~~
+
+Datakit does not require you to use a particular testing framework. Because
+each plugin is technically a stand-alone Python package, you're free to
+use whatever testing framework you prefer.
+
+Datakit itself uses the pytest_ framework. We highly recommend it!
+
+.. [1] As a convention, Datakit entry points should follow
+  the ``plugin:command`` format. For example ``data:push`` in the :ref:`example-plugin`.
+
+.. _Cliff: http://docs.openstack.org/developer/cliff/
 .. _Cliff command classes: http://docs.openstack.org/developer/cliff/classes.html#cliff.command.Command
 .. _entry points: https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points
 .. _pyenv: https://github.com/yyuu/pyenv#installation
 .. _pyenv-virtualenv: https://github.com/yyuu/pyenv-virtualenv
+.. _pytest: http://doc.pytest.org/en/latest/
 .. _tox: http://codespeak.net/tox
