@@ -1,15 +1,21 @@
-# Config file for automatic testing at travis-ci.org
-# This file will be regenerated if you run travis_pypi_setup.py
-
 language: python
+python: 3.5
 
 env:
   - TOXENV=py35
+  - TOXENV=py34
+  - TOXENV=py33
 
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox
+script: tox -e ${TOXENV}
 
-# command to run tests, e.g. python setup.py test
-script: tox
-
-
+deploy:
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: zstumgoren
+  password:
+    secure: PLEASE_REPLACE_ME
+  on:
+    tags: true
+    repo: associatedpress/datakit-core
+    condition: $TOXENV == py35
