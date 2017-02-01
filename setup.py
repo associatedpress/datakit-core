@@ -1,23 +1,31 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""
+
+Datakit
+-------
+
+`datakit-core` is a pluggable command-line tool for creating custom
+data science workflows.
+
+It's intended to be used with one or more compatible plugins. Check out the `Associated Pess Github account <https://github.com/associatedpress?utf8=%E2%9C%93&q=datakit&type=&language=>`_  
+for an evolving set of plugins or learn `how to write your own <http://datakit-core.readthedocs.io/en/latest/developers.html#creating-plugins>`_.
+
+"""
+
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
-with open('README.rst') as readme_file:
-    readme = readme_file.read()
-
 setup(
     name='datakit-core',
     version='0.1',
-    description="Tool for managing data project life cycle.",
-    long_description=readme,
+    description="A pluggable command-line tool for custom data science workflows.",
+    long_description=__doc__,
     author="Serdar Tumgoren",
     author_email='zstumgoren@gmail.com',
     url='https://github.com/associatedpress/datakit-core',
     license="ISCL",
-    keywords='datakit-core',
+    keywords='datakit',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
