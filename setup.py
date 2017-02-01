@@ -15,7 +15,7 @@ setup(
     long_description=readme,
     author="Serdar Tumgoren",
     author_email='zstumgoren@gmail.com',
-    url='https://github.com/zstumgoren/datakit-core',
+    url='https://github.com/associatedpress/datakit-core',
     license="ISCL",
     keywords='datakit-core',
     classifiers=[
