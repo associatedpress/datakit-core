@@ -12,6 +12,7 @@ Contents:
    readme
    developers
    authors
+   history
 
 Indices and tables
 ==================
