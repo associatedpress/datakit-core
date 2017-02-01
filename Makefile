@@ -49,7 +49,7 @@ lint:
 	flake8 datakit tests
 
 test:
-	python setup.py test
+	py.test
 
 test-all:
 	tox
