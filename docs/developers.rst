@@ -49,6 +49,11 @@ Here's how to set up Datakit for local development.
 Creating plugins
 ----------------
 
+Quickstart
+~~~~~~~~~~
+
+To jump-start your next plugin, check out Cookiecutter_ and cookiecutter-datakit-plugin_.
+
 Overview
 ~~~~~~~~
 
@@ -75,26 +80,15 @@ You can also check out our :ref:`example-plugin` below for the basics of wiring 
 Plugin structure
 ~~~~~~~~~~~~~~~~
 
-Datait plugins should have the following structure::
+Datakit plugins should have the following structure::
 
     plugin-name # root of git repo
-    ├── setup.py
-    ├── tox.ini
-    ├── LICENSE.txt
     ├── plugin_name
     │   ├── __init__.py
-    │   ├── command1.py
-    │   ├── command2.py
-    │   ├── library_module.py
-    ├── tests
-    │   ├── test_command1.py
-    │   ├── test_command2.py
-    │   └── test_library_module.py
-    ├── requirements.txt
-    ├── test-requirements.txt
-    └── tox.ini
+    │   └── some_command.py
+    └── setup.py
 
-Most importantly, to make a custom command available to the *datakit* command-line tool,
+To make a custom command discoverable by the *datakit* command-line tool,
 you must expose it in the plugin's *setup.py*. See :ref:`example-plugin` for details.
 
 Plugin configurations
@@ -118,7 +112,7 @@ For example, the *datakit-data* plugin would store configs in::
 Example Plugin
 ~~~~~~~~~~~~~~
 
-Let's say we have a *datakit-data* plugin with the below (simplified) file structure::
+Let's say we have a *datakit-data* plugin with the below file structure::
 
     datakit-data
     ├── setup.py
@@ -158,6 +152,8 @@ Datakit itself uses the pytest_ framework. We highly recommend it!
 .. [1] As a convention, Datakit entry points should follow
   the ``plugin:command`` format. For example ``data:push`` in the :ref:`example-plugin`.
 
+.. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _cookiecutter-datakit-plugin: https://github.com/associatedpress/cookiecutter-datakit-plugin
 .. _Cliff: http://docs.openstack.org/developer/cliff/
 .. _Cliff command classes: http://docs.openstack.org/developer/cliff/classes.html#cliff.command.Command
 .. _entry points: https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points
