@@ -1,3 +1,7 @@
+.. image:: https://img.shields.io/travis/associatedpress/datakit-core.svg
+    :target: https://travis-ci.org/associatedpress/datakit-core
+    :alt: Linux build status on Travis CI
+    
 =======
 Datakit
 =======
