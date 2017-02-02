@@ -1,7 +1,17 @@
+.. image:: https://img.shields.io/pypi/v/datakit-core.svg
+        :target: https://pypi.python.org/pypi/datakit-core
+
+
 .. image:: https://img.shields.io/travis/associatedpress/datakit-core.svg
     :target: https://travis-ci.org/associatedpress/datakit-core
     :alt: Linux build status on Travis CI
     
+    
+.. image:: https://readthedocs.org/projects/datakit-core/badge/?version=latest
+    :target: https://datakit-core.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+    
+
 =======
 Datakit
 =======
