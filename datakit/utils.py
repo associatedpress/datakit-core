@@ -1,4 +1,5 @@
 import errno
+import json
 import os
 
 
@@ -20,5 +21,14 @@ def mkdir_p(path):
 
 
 def makedirs(basepath, dirs=[]):
-    build_pth = lambda directory: os.path.join(basepath, directory)
-    [mkdir_p(build_pth(pth)) for pth in dirs]
+    return [mkdir_p(os.path.join(basepath, pth)) for pth in dirs]
+
+
+def read_json(path):
+    with open(path) as fh:
+        return json.load(fh)
+
+
+def write_json(path, data):
+    with open(path, 'w') as fh:
+        json.dump(data, fh)

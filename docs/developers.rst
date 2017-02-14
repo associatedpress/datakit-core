@@ -140,6 +140,17 @@ After installing the plugin, Datakit can discover and invoke these new commands:
   $ datakit data:push
   $ datakit data:pull
 
+
+Plugin Mixins
+~~~~~~~~~~~~~~
+
+Datakit provides the :py:class:`datakit.command_helpers.CommandHelpers` mixin class
+to help build plugin commands.
+
+This mixin contains basic configuration methods and attributes such as
+default locations for plugin-specific configuration files.
+
+
 Testing
 ~~~~~~~
 
