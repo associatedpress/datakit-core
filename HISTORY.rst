@@ -2,8 +2,8 @@
 History
 =======
 
-Unreleased
------------
+0.2.0 (2017-02-14)
+------------------
 
 * Add :py:class:`datakit.command_helpers.CommandHelpers` mixin and misc utility functions in :py:mod:`datakit.utils`.
 
