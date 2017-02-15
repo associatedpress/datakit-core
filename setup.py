@@ -18,7 +18,7 @@ except ImportError:
 
 setup(
     name='datakit-core',
-    version='0.1',
+    version='0.2.0',
     description="A pluggable command-line tool for custom data science workflows.",
     long_description=__doc__,
     author="Serdar Tumgoren",
