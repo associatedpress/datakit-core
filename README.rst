@@ -47,7 +47,7 @@ Command-line
 After installing one or more plugins, Datakit can be used to invoke the
 commands provided by those plugins.
 
-Let's say you installed a plugin to create project skeletons.
+Let's say you installed the `datakit-project`_ plugin, which helps create project skeletons.
 
 To see which commands the plugin provides, try the ``--help`` flag::
 
@@ -81,7 +81,8 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 .. [1] Plugins may also provide more robust docs, so don't forget to check those out when available.
 
-.. _our plugins on Github: https://github.com/associatedpress
+.. _our plugins on Github: https://github.com/search?q=topic%3Adatakit-cli+org%3Aassociatedpress&type=Repositories
 .. _Cliff: http://docs.openstack.org/developer/cliff/index.html
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _datakit-project: http://datakit-project.readthedocs.io/en/latest/
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
