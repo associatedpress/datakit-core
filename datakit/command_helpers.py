@@ -16,7 +16,7 @@ class CommandHelpers:
     :Usage:
 
     * Create a plugin command that subclasses both CommandHelpers and Cliff's `Command class <http://docs.openstack.org/developer/cliff/classes.html#command>`_.
-    * Define :py:attr:`CommandHelpers.project_slug` (i.e. the root of plugin's repo).
+    * Define :py:attr:`CommandHelpers.plugin_slug` (i.e. the root of plugin's repo).
     * Optionally, customize the :py:attr:`CommandHelpers.default_configs` property (which must
         return a dictionary)
 
@@ -34,7 +34,7 @@ class CommandHelpers:
 
         class SomeCommand(CommandHelpers, Command):
 
-            project_slug = 'my-plugin'
+            plugin_slug = 'my-plugin'
 
             def take_action(self, parsed):
                 print('do stuff')
@@ -46,7 +46,7 @@ class CommandHelpers:
     """
 
     log = logging.getLogger(__name__)
-    project_slug = None
+    plugin_slug = None
 
     def update_configs(self, new_configs):
         configs = self.configs
@@ -72,7 +72,7 @@ class CommandHelpers:
         return os.path.join(
             datakit.utils.home_dir(),
             'plugins',
-            self.project_slug
+            self.plugin_slug
         )
 
     @property

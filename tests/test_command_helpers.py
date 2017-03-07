@@ -24,7 +24,7 @@ def setup_environment(monkeypatch, tmpdir):
 
 class FakeCommand(CommandHelpers, Command):
 
-    project_slug = "datakit-test-plugin"
+    plugin_slug = "datakit-test-plugin"
 
     def take_action(self, parsed_args):
         print("command invoked")
@@ -32,7 +32,7 @@ class FakeCommand(CommandHelpers, Command):
 
 class FakeCommand2(CommandHelpers, Command):
 
-    project_slug = "datakit-test-plugin2"
+    plugin_slug = "datakit-test-plugin2"
 
     def take_action(self, parsed_args):
         print("command invoked")
