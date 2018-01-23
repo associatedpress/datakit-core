@@ -17,9 +17,9 @@ Core development
 
 Here's how to set up Datakit for local development.
 
-1. Install Python 3.5 using pyenv_ and pyenv-virtualenv_::
+1. Install Python 3.6 using pyenv_ and pyenv-virtualenv_::
 
-    $ pyenv install 3.5.1
+    $ pyenv install 3.6.1
 
 2. Clone `datakit-core`::
 
@@ -69,8 +69,8 @@ For example, to install a plugin called *datakit-data*::
 
 The `entry points`_ strategy lets Datakit easily discover and invoke plugin commands::
 
-    $ datakit data:push
-    $ datakit data:pull
+    $ datakit data push
+    $ datakit data pull
 
 The Cliff_ documentation details how to use `entry points`_ in a plugin,
 and contains a `demo app <http://docs.openstack.org/developer/cliff/demoapp.html>`_ for a simple plugin.
@@ -129,16 +129,16 @@ configure the `entry points`_ variable in *setup.py* as below:
       ....
        entry_points={
           'datakit.plugins': [
-            'data:push= datakit_data.push:Push',
-            'data:pull= datakit_data.pull:Pull',
+            'data push= datakit_data.push:Push',
+            'data pull= datakit_data.pull:Pull',
           ]
       }
       ....
 
 After installing the plugin, Datakit can discover and invoke these new commands::
 
-  $ datakit data:push
-  $ datakit data:pull
+  $ datakit data push
+  $ datakit data pull
 
 
 Plugin Mixins

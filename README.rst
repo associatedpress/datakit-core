@@ -53,16 +53,16 @@ To see which commands the plugin provides, try the ``--help`` flag::
 
     $ datakit --help
 
-The plugin provides a ``project:create`` command, which sounds like it fits the bill.
+The plugin provides a ``project create`` command, which sounds like it fits the bill.
 
 To see which flags are available or required, try using the ``--help`` flag again::
 
-    $ datakit project:create --help
+    $ datakit project create --help
 
 It appears you need to specify a Cookiecutter_ template to use this command. Let's
 try it::
 
-    $ datakit project:create --template https://github.com/associatedpress/cookiecutter-r-project.git
+    $ datakit project create --template https://github.com/associatedpress/cookiecutter-r-project.git
 
 That's the basic recipe for working with plugins: install, explore, and invoke! [1]_
 

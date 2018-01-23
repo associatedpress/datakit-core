@@ -1,5 +1,4 @@
 import logging
-import json
 import os
 
 import datakit.utils
@@ -15,7 +14,8 @@ class CommandHelpers:
 
     :Usage:
 
-    * Create a plugin command that subclasses both CommandHelpers and Cliff's `Command class <http://docs.openstack.org/developer/cliff/classes.html#command>`_.
+    * Create a plugin command that subclasses both CommandHelpers and Cliff's
+      `Command class <http://docs.openstack.org/developer/cliff/classes.html#command>`_.
     * Define :py:attr:`CommandHelpers.plugin_slug` (i.e. the root of plugin's repo).
     * Optionally, customize the :py:attr:`CommandHelpers.default_configs` property (which must
         return a dictionary)

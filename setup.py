@@ -13,10 +13,7 @@ It's intended to be used with one or more compatible plugins. Check out the
 
 """
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name='datakit-core',
@@ -33,11 +30,13 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Natural Language :: English',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Environment :: Console',
     ],
-    packages=['datakit'],
-    package_dir={'datakit': 'datakit'},
+    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     include_package_data=True,
     install_requires=['cliff'],
     entry_points={
@@ -47,6 +46,6 @@ setup(
         'datakit.plugins': []
     },
     test_suite='tests',
-    tests_require=['pytest', 'pytest-catchlog', 'tox'],
+    tests_require=['pytest', 'pytest-catchlog'],
     zip_safe=False,
 )
