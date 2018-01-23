@@ -73,7 +73,7 @@ def test_update_configs(tmpdir):
 
 
 def test_configs_no_file():
-    cmd = FakeCommand(None, None, cmd_name='my_plugin:fake_command')
+    cmd = FakeCommand(None, None, cmd_name='my_plugin fake_command')
     assert cmd.configs == {}
 
 

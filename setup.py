@@ -17,7 +17,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='datakit-core',
-    version='0.2.1',
+    version='0.3.0',
     description="A pluggable command-line tool for custom data science workflows.",
     long_description=__doc__,
     author="Serdar Tumgoren",
@@ -46,6 +46,6 @@ setup(
         'datakit.plugins': []
     },
     test_suite='tests',
-    tests_require=['pytest', 'pytest-catchlog'],
+    tests_require=['pytest', 'pytest-catchlog', 'pytest-mock'],
     zip_safe=False,
 )

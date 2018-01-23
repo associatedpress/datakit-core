@@ -12,4 +12,5 @@ Sphinx==1.4.8
 pip==9.0.1
 pytest==3.0.4
 pytest-catchlog==1.2.2
+pytest-mock==1.5.0
 PyYAML==3.11

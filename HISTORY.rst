@@ -2,9 +2,10 @@
 History
 =======
 
-0.2.2 (TBD)
+0.2.2 (2018-01-26)
 ------------------
 
+* Customize Help display to group commands by plugin
 * Update docs to reflect new package syntax
 * Misc. test config and packaging fixes
 * Flake standardizations

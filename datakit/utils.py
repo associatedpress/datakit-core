@@ -32,3 +32,16 @@ def read_json(path):
 def write_json(path, data):
     with open(path, 'w') as fh:
         json.dump(data, fh)
+
+
+def dist_for_obj(obj):
+    try:
+        dist = obj.dist.project_name
+        version = obj.dist.version
+        if version:
+            dist += " ({})".format(version)
+        return dist
+    except AttributeError:
+        # Raised for Cliff, which returns an
+        # EntryPointWrapper object
+        return 'cliff'
