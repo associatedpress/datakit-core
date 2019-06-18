@@ -41,38 +41,25 @@ For a system-wide install, from the command line::
 Usage
 =====
 
-Command-line
-~~~~~~~~~~~~
-
 After installing one or more plugins, Datakit can be used to invoke the
 commands provided by those plugins.
 
-Let's say you installed the `datakit-project`_ plugin, which helps create project skeletons.
-
-To see which commands the plugin provides, try the ``--help`` flag::
+To see which commands plugins provide, try the ``--help`` flag::
 
     $ datakit --help
 
-The plugin provides a ``project create`` command, which sounds like it fits the bill.
+Example: datakit-project
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-To see which flags are available or required, try using the ``--help`` flag again::
+Install datakit-project:
 
-    $ datakit project create --help
+.. image:: http://data.ap.org/projects/2019/datakit-docs/img/1.gif
 
-It appears you need to specify a Cookiecutter_ template to use this command. Let's
-try it::
+The plugin provides a ``project create`` command. You need to specify a Cookiecutter_ template to use this command, for example the AP's R template:
 
-    $ datakit project create --template https://github.com/associatedpress/cookiecutter-r-project.git
+.. image:: http://data.ap.org/projects/2019/datakit-docs/img/2.gif
 
 That's the basic recipe for working with plugins: install, explore, and invoke! [1]_
-
-
-Code
-~~~~~
-To use Datakit in a project::
-
-    import datakit
-
 
 Credits
 ---------
