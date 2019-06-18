@@ -51,9 +51,9 @@ To see which commands plugins provide, try the ``--help`` flag::
 Example: datakit-project
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Install datakit-project:
+Install datakit-project::
 
-.. image:: http://data.ap.org/projects/2019/datakit-docs/img/1.gif
+    $ pip install datakit-project
 
 The plugin provides a ``project create`` command. You need to specify a Cookiecutter_ template to use this command, for example the AP's R template:
 
