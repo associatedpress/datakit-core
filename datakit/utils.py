@@ -29,9 +29,9 @@ def read_json(path):
         return json.load(fh)
 
 
-def write_json(path, data):
+def write_json(path, data, indent=4):
     with open(path, 'w') as fh:
-        json.dump(data, fh)
+        json.dump(data, fh, indent=indent)
 
 
 def dist_for_obj(obj):
