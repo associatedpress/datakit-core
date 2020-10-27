@@ -1,5 +1,5 @@
 bumpversion==0.5.3
-cryptography==1.7
+cryptography==3.2
 # Peg docutils until below bug resolved
 # https://github.com/sphinx-doc/sphinx/issues/3212
 docutils==0.12
