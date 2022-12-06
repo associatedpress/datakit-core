@@ -71,9 +71,11 @@ docs:
 servedocs: docs
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
-release: clean
-	python setup.py sdist upload
-	python setup.py bdist_wheel upload
+test-release: clean dist ## release distros to test.pypi.org
+	twine upload -r testpypi dist/*
+
+release: clean dist ## package and upload a release
+	twine upload -r pypi dist/*
 
 dist: clean
 	python setup.py sdist
