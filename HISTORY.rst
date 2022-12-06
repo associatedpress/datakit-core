@@ -2,6 +2,11 @@
 History
 =======
 
+0.3.1 (2022-12-05)
+------------------
+
+* Pretty print JSON in configs (thanks Andrew!)
+
 0.2.2 (2018-01-26)
 ------------------
 
