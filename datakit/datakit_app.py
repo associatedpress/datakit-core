@@ -20,7 +20,7 @@ class Datakit(App):
         :param version: version number for the application
         :paramtype version: str
         :param argparse_kwargs: extra keyword argument passed to the
-                                ArgumentParser constructor
+        ArgumentParser constructor
         :paramtype extra_kwargs: dict
         """
         argparse_kwargs = argparse_kwargs or {}
@@ -81,10 +81,10 @@ class Datakit(App):
     def print_help_if_requested(self):
         """Print help and exits if deferred help is enabled and requested.
         '--help' shows the help message and exits:
-         * without calling initialize_app if not self.deferred_help (default),
-         * after initialize_app call if self.deferred_help,
-         * during initialize_app call if self.deferred_help and subclass calls
-           explicitly this method in initialize_app.
+        * without calling initialize_app if not self.deferred_help (default),
+        * after initialize_app call if self.deferred_help,
+        * during initialize_app call if self.deferred_help and subclass calls
+        explicitly this method in initialize_app.
         """
         if self.deferred_help and self.options.deferred_help:
             action = help.HelpAction(None, None, default=self)
