@@ -94,7 +94,7 @@ def test_show_help_for_help():
     help_text = stdout.getvalue()
     basecommand = os.path.split(sys.argv[0])[1]
     assert 'usage: %s [--version]' % basecommand in help_text
-    assert 'optional arguments:\n  --version' in help_text
+    assert 'optional arguments:\n  --version' in help_text or 'options:\n  --version' in help_text
     expected = (
         '  one            Test command.\n'
         '  three word command  Test command.\n'
