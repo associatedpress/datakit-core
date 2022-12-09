@@ -2,9 +2,9 @@
         :target: https://pypi.python.org/pypi/datakit-core
 
 
-.. image:: https://img.shields.io/travis/associatedpress/datakit-core.svg
-    :target: https://travis-ci.org/associatedpress/datakit-core
-    :alt: Linux build status on Travis CI
+.. image:: https://github.com/associatedpress/datakit-core/actions/workflows/main.yml/badge.svg
+    :target: https://github.com/associatedpress/datakit-core/actions/workflows/main.yml
+    :alt: Linux build status on Github Actions
 
 
 .. image:: https://readthedocs.org/projects/datakit-core/badge/?version=latest
