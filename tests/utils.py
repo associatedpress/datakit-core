@@ -39,7 +39,7 @@ class TestDeprecatedCommand(TestCommand):
     deprecated = True
 
 
-class TestCommandManager(CommandManager):
+class DatakitTestCommandManager(CommandManager):
 
     def load_commands(self, namespace):
         if namespace == TEST_NAMESPACE:

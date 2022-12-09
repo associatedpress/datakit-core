@@ -26,14 +26,14 @@ from unittest import mock
 from cliff import app as application
 import pytest
 
-from .utils import TEST_NAMESPACE, TestCommandManager
+from .utils import TEST_NAMESPACE, DatakitTestCommandManager
 from datakit import help
 
 
 def test_show_help_for_command():
     stdout = StringIO()
     app = application.App('testing', '1',
-                          TestCommandManager(TEST_NAMESPACE),
+                          DatakitTestCommandManager(TEST_NAMESPACE),
                           stdout=stdout)
     app.NAME = 'test'
     help_cmd = help.HelpCommand(app, mock.Mock())
@@ -49,7 +49,7 @@ def test_show_help_for_command():
 def test_list_matching_commands():
     stdout = StringIO()
     app = application.App('testing', '1',
-                          TestCommandManager(TEST_NAMESPACE),
+                          DatakitTestCommandManager(TEST_NAMESPACE),
                           stdout=stdout)
     app.NAME = 'test'
     help_cmd = help.HelpCommand(app, mock.Mock())
@@ -67,7 +67,7 @@ def test_list_matching_commands():
 def test_list_matching_commands_no_match():
     stdout = StringIO()
     app = application.App('testing', '1',
-                          TestCommandManager(TEST_NAMESPACE),
+                          DatakitTestCommandManager(TEST_NAMESPACE),
                           stdout=stdout)
     app.NAME = 'test'
     help_cmd = help.HelpCommand(app, mock.Mock())
@@ -80,7 +80,7 @@ def test_list_matching_commands_no_match():
 def test_show_help_for_help():
     stdout = StringIO()
     app = application.App('testing', '1',
-                          TestCommandManager(TEST_NAMESPACE),
+                          DatakitTestCommandManager(TEST_NAMESPACE),
                           stdout=stdout)
     app.NAME = 'test'
     app.options = mock.Mock()
@@ -105,7 +105,7 @@ def test_show_help_for_help():
 def test_list_deprecated_commands():
     stdout = StringIO()
     app = application.App('testing', '1',
-                          TestCommandManager(TEST_NAMESPACE),
+                          DatakitTestCommandManager(TEST_NAMESPACE),
                           stdout=stdout)
     app.NAME = 'test'
     try:
@@ -126,7 +126,7 @@ def test_show_help_with_ep_load_fail(mocker):
     )
     app = application.App(
         'testing', '1',
-        TestCommandManager(TEST_NAMESPACE),
+        DatakitTestCommandManager(TEST_NAMESPACE),
         stdout=stdout
     )
     app.NAME = 'test'
@@ -153,7 +153,7 @@ def test_show_help_print_exc_with_ep_load_fail(mocker):
     )
     app = application.App(
         'testing', '1',
-        TestCommandManager(TEST_NAMESPACE),
+        DatakitTestCommandManager(TEST_NAMESPACE),
         stdout=stdout
     )
     app.NAME = 'test'
@@ -190,7 +190,7 @@ def test_help_commands_grouped_by_module(mocker):
     from datakit.datakit_app import Datakit
     app = Datakit(
         'testing', '1',
-        TestCommandManager(TEST_NAMESPACE),
+        DatakitTestCommandManager(TEST_NAMESPACE),
         stdout=stdout
     )
     app.NAME = 'test'
@@ -206,7 +206,7 @@ def test_help_commands_grouped_by_module(mocker):
     help_text = stdout.getvalue()
     assert 'cliff' not in help_text
     assert re.search(
-        "Commands:\n\s+complete.+?datakit-plugin-a.+?datakit-plugin-b",
+        r"Commands:\n\s+complete.+?datakit-plugin-a.+?datakit-plugin-b",
         help_text,
         re.DOTALL
     )
