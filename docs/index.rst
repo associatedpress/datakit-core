@@ -14,10 +14,15 @@ Contents:
    authors
    history
 
+.. toctree::
+   :hidden:
+
+   datakit
+   modules
+
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
