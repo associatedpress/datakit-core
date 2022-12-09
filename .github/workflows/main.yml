@@ -1,0 +1,23 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.8", "3.9"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install dependencies
+        run: pip install tox
+      - name: Test with tox
+        run: |
+          tox -e py
