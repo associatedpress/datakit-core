@@ -46,6 +46,6 @@ setup(
         'datakit.plugins': []
     },
     test_suite='tests',
-    tests_require=['pytest', 'pytest-catchlog', 'pytest-mock'],
+    tests_require=['pytest', 'pytest-mock'],
     zip_safe=False,
 )
