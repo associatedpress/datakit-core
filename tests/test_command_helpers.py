@@ -1,5 +1,6 @@
 from cliff.command import Command
 import pytest
+import os
 
 from datakit import CommandHelpers
 from datakit.utils import read_json
@@ -42,8 +43,8 @@ def test_default_properties():
     without specifying a template
     """
     cmd = FakeCommand(None, None, cmd_name='my_plugin fake_command')
-    assert cmd.plugin_config_parent_dir.endswith('.datakit/plugins/datakit-test-plugin')
-    assert cmd.plugin_config_path.endswith('.datakit/plugins/datakit-test-plugin/config.json')
+    assert cmd.plugin_config_parent_dir.endswith(os.path.join('.datakit', 'plugins', 'datakit-test-plugin'))
+    assert cmd.plugin_config_path.endswith(os.path.join('.datakit', 'plugins', 'datakit-test-plugin', 'config.json'))
     assert cmd.default_configs == {}
 
 
