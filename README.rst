@@ -1,16 +1,13 @@
 .. image:: https://img.shields.io/pypi/v/datakit-core.svg
         :target: https://pypi.python.org/pypi/datakit-core
 
-
 .. image:: https://github.com/associatedpress/datakit-core/actions/workflows/main.yml/badge.svg
     :target: https://github.com/associatedpress/datakit-core/actions/workflows/main.yml
-    :alt: Linux build status on Github Actions
-
+    :alt: Build status on Github Actions
 
 .. image:: https://readthedocs.org/projects/datakit-core/badge/?version=latest
     :target: https://datakit-core.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
-
 
 =======
 Datakit
