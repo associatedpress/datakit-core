@@ -17,7 +17,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='datakit-core',
-    version='0.3.1',
+    version='0.3.2',
     description="A pluggable command-line tool for custom data science workflows.",
     long_description=__doc__,
     author="Serdar Tumgoren",

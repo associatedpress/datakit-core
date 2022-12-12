@@ -11,7 +11,7 @@ def main(argv=sys.argv[1:]):
     else:
         myapp = Datakit(
             description='datakit',
-            version='0.3.0',
+            version='0.3.2',
             command_manager=CommandManager('datakit.plugins'),
             deferred_help=True,
         )
