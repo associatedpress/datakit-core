@@ -45,7 +45,6 @@ class HelpAction(argparse.Action):
         cliff_cmds = grouped_cmds.pop('cliff', [])
         for ep in cliff_cmds:
             self._handle_call(ep, parser, namespace, values, option_string)
-        self.current_dist = None
         for plugin_dist_name, plugin_commands in sorted(grouped_cmds.items()):
             self._log_header(plugin_dist_name)
             for ep in plugin_commands:

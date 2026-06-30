@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 
@@ -62,7 +63,7 @@ class CommandHelpers:
     def configs(self):
         try:
             configs = read_json(self.plugin_config_path)
-        except FileNotFoundError:
+        except (FileNotFoundError, json.JSONDecodeError):
             configs = self.default_configs
             self.write_configs(configs)
         return configs

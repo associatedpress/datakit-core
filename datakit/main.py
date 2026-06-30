@@ -2,6 +2,7 @@ import sys
 
 from cliff.commandmanager import CommandManager
 
+from . import __version__
 from .datakit_app import Datakit
 
 
@@ -13,7 +14,7 @@ def main(argv=None):
     else:
         myapp = Datakit(
             description='datakit',
-            version='0.3.2',
+            version=__version__,
             command_manager=CommandManager('datakit.plugins'),
             deferred_help=True,
         )
