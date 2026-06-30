@@ -42,7 +42,7 @@ class HelpAction(argparse.Action):
                 .setdefault(dist_for_obj(ep), [])\
                 .append(ep)
         # Print built-in Cliff commands first *without* the header
-        cliff_cmds = grouped_cmds.pop('cliff')
+        cliff_cmds = grouped_cmds.pop('cliff', [])
         for ep in cliff_cmds:
             self._handle_call(ep, parser, namespace, values, option_string)
         self.current_dist = None

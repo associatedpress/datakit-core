@@ -5,7 +5,9 @@ from cliff.commandmanager import CommandManager
 from .datakit_app import Datakit
 
 
-def main(argv=sys.argv[1:]):
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
     if len(argv) == 0:
         print("You must invoke a command, or try --help")
     else:
