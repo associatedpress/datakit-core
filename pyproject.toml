@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "datakit-core"
-version = "0.3.2"
+version = "0.4.0"
 description = "A pluggable command-line tool for custom data science workflows."
 authors = [
     {name = "Larry Fenn", email = "lfenn@ap.org"},

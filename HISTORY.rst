@@ -2,6 +2,12 @@
 History
 =======
 
+0.4.0 (2026-06-30)
+------------------
+
+* Switch to uv for development build and testing
+* Fixed a bug affecting help text for plugins
+
 0.3.1 (2022-12-05)
 ------------------
 

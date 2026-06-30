@@ -18,7 +18,6 @@ Contents:
    :hidden:
 
    datakit
-   modules
 
 Indices and tables
 ==================
