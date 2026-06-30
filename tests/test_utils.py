@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import errno
+import importlib.metadata
 import os
 
 import pytest
@@ -42,16 +43,29 @@ def test_mkdir_p_reraises_non_eexist_errors(tmpdir, mocker):
 
 def test_dist_for_obj_uses_dist_attributes():
     obj = type('Obj', (), {})()
-    obj.dist = type('Dist', (), {'project_name': 'datakit-test-plugin', 'version': '1.2.3'})()
+    obj.dist = type('Dist', (), {'name': 'datakit-test-plugin', 'version': '1.2.3'})()
     assert utils.dist_for_obj(obj) == 'datakit-test-plugin (1.2.3)'
 
 
 def test_dist_for_obj_omits_blank_version():
     obj = type('Obj', (), {})()
-    obj.dist = type('Dist', (), {'project_name': 'datakit-test-plugin', 'version': ''})()
+    obj.dist = type('Dist', (), {'name': 'datakit-test-plugin', 'version': ''})()
     assert utils.dist_for_obj(obj) == 'datakit-test-plugin'
 
 
 def test_dist_for_obj_falls_back_to_cliff_without_dist():
     obj = type('Obj', (), {})()
     assert utils.dist_for_obj(obj) == 'cliff'
+
+
+def test_dist_for_obj_handles_real_importlib_metadata_entry_point():
+    """
+    Regression test: real plugin commands are loaded as
+    importlib.metadata.EntryPoint objects (not the old pkg_resources-style
+    objects with a `.project_name` attribute), so dist_for_obj must read
+    `.dist.name` or it silently mis-files every installed plugin under the
+    unlabeled "cliff" bucket in `datakit --help`.
+    """
+    eps = importlib.metadata.entry_points(group='cliff.formatter.list')
+    ep = next(iter(eps))
+    assert utils.dist_for_obj(ep) == 'cliff ({})'.format(importlib.metadata.version('cliff'))

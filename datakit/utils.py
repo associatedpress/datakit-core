@@ -1,16 +1,17 @@
 import errno
 import json
 import os
+from typing import Any
 
 
-def home_dir():
+def home_dir() -> str:
     try:
         return os.environ['DATAKIT_HOME']
     except KeyError:
         return os.path.join(os.path.expanduser('~'), '.datakit')
 
 
-def mkdir_p(path):
+def mkdir_p(path: str) -> None:
     try:
         os.makedirs(path)
     except OSError as exc:  # Python >2.5
@@ -20,19 +21,19 @@ def mkdir_p(path):
             raise
 
 
-def read_json(path):
+def read_json(path: str) -> Any:
     with open(path) as fh:
         return json.load(fh)
 
 
-def write_json(path, data, indent=4):
+def write_json(path: str, data: Any, indent: int = 4) -> None:
     with open(path, 'w') as fh:
         json.dump(data, fh, indent=indent)
 
 
-def dist_for_obj(obj):
+def dist_for_obj(obj: Any) -> str:
     try:
-        dist = obj.dist.project_name
+        dist = obj.dist.name
         version = obj.dist.version
         if version:
             dist += " ({})".format(version)

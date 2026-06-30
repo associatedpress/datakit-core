@@ -12,16 +12,18 @@ def test_interactive_mode_override(capsys):
     This short-circuits Cliff's potentially confusing
     default behavior of dropping into interactive mode.
     """
-    dk_main([])
+    result = dk_main([])
     out, err = capsys.readouterr()
     assert 'You must invoke a command' in out
+    assert result == 1
 
 
 def test_main_reads_argv_from_sys_when_none_given(mocker, capsys):
     mocker.patch('sys.argv', ['datakit'])
-    dk_main()
+    result = dk_main()
     out, err = capsys.readouterr()
     assert 'You must invoke a command' in out
+    assert result == 1
 
 
 def test_main_dispatches_to_app_run(mocker):

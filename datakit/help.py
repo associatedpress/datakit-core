@@ -17,6 +17,7 @@ import argparse
 import inspect
 import sys
 import traceback
+from typing import Any, Optional, Sequence, Union
 
 from cliff import command
 
@@ -30,7 +31,13 @@ class HelpAction(argparse.Action):
     The commands are determined by checking the CommandManager
     instance, passed in as the "default" value for the action.
     """
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        values: Union[str, Sequence[Any], None],
+        option_string: Optional[str] = None,
+    ) -> None:
         self.app = self.default
         parser.print_help(self.app.stdout)
         self.app.stdout.write('\nCommands:\n')
@@ -52,7 +59,14 @@ class HelpAction(argparse.Action):
         self.app.stdout.write('\n')
         sys.exit(0)
 
-    def _handle_call(self, ep, parser, namespace, values, option_string=None):
+    def _handle_call(
+        self,
+        ep: Any,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        values: Union[str, Sequence[Any], None],
+        option_string: Optional[str] = None,
+    ) -> None:
         name = ep.name
         try:
             factory = ep.load()
@@ -76,11 +90,11 @@ class HelpAction(argparse.Action):
         one_liner = cmd.get_description().split('\n')[0]
         self._log_cmd(name, one_liner)
 
-    def _log_header(self, dist_name):
+    def _log_header(self, dist_name: str) -> None:
         underline = "-" * len(dist_name)
         self.app.stdout.write('\n%s\n%s\n' % (dist_name, underline))
 
-    def _log_cmd(self, name, one_liner):
+    def _log_cmd(self, name: str, one_liner: str) -> None:
         self.app.stdout.write('  %-13s  %s\n' % (name, one_liner))
 
 
@@ -88,7 +102,7 @@ class HelpCommand(command.Command):
     """print detailed help for another command
     """
 
-    def get_parser(self, prog_name):
+    def get_parser(self, prog_name: str) -> argparse.ArgumentParser:
         parser = super(HelpCommand, self).get_parser(prog_name)
         parser.add_argument('cmd',
                             nargs='*',
@@ -96,7 +110,7 @@ class HelpCommand(command.Command):
                             )
         return parser
 
-    def take_action(self, parsed_args):
+    def take_action(self, parsed_args: argparse.Namespace) -> int:
         if parsed_args.cmd:
             try:
                 the_cmd = self.app.command_manager.find_command(

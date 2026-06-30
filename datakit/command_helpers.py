@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from typing import Any, Optional
 
 import datakit.utils
 
@@ -47,20 +48,20 @@ class CommandHelpers:
     """
 
     log = logging.getLogger(__name__)
-    plugin_slug = None
+    plugin_slug: Optional[str] = None
 
-    def update_configs(self, new_configs):
+    def update_configs(self, new_configs: dict[str, Any]) -> dict[str, Any]:
         configs = self.configs
         configs.update(new_configs)
         self.write_configs(configs)
         return configs
 
-    def write_configs(self, configs):
+    def write_configs(self, configs: dict[str, Any]) -> None:
         datakit.utils.mkdir_p(self.plugin_config_parent_dir)
         write_json(self.plugin_config_path, configs)
 
     @property
-    def configs(self):
+    def configs(self) -> dict[str, Any]:
         try:
             configs = read_json(self.plugin_config_path)
         except (FileNotFoundError, json.JSONDecodeError):
@@ -69,7 +70,7 @@ class CommandHelpers:
         return configs
 
     @property
-    def plugin_config_parent_dir(self):
+    def plugin_config_parent_dir(self) -> str:
         if self.plugin_slug is None:
             raise ValueError(
                 '{} must define a plugin_slug class attribute'.format(type(self).__name__)
@@ -81,12 +82,12 @@ class CommandHelpers:
         )
 
     @property
-    def plugin_config_path(self):
+    def plugin_config_path(self) -> str:
         return os.path.join(
             self.plugin_config_parent_dir,
             'config.json'
         )
 
     @property
-    def default_configs(self):
+    def default_configs(self) -> dict[str, Any]:
         return {}

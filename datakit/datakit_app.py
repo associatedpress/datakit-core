@@ -1,3 +1,5 @@
+from typing import Any, Optional
+
 from cliff import _argparse
 from cliff.app import App
 
@@ -6,12 +8,16 @@ from datakit import help
 
 class Datakit(App):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super(Datakit, self).__init__(*args, **kwargs)
         self.command_manager.add_command('help', help.HelpCommand)
 
-    def build_option_parser(self, description, version,
-                            argparse_kwargs=None):
+    def build_option_parser(
+        self,
+        description: str,
+        version: str,
+        argparse_kwargs: Optional[dict[str, Any]] = None,
+    ) -> _argparse.ArgumentParser:
         """Return an argparse option parser for this application.
         Subclasses may override this method to extend
         the parser with more global options.
@@ -78,7 +84,7 @@ class Datakit(App):
         )
         return parser
 
-    def print_help_if_requested(self):
+    def print_help_if_requested(self) -> None:
         """Print help and exits if deferred help is enabled and requested.
         '--help' shows the help message and exits:
         * without calling initialize_app if not self.deferred_help (default),
