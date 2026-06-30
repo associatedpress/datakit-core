@@ -69,6 +69,10 @@ class CommandHelpers:
 
     @property
     def plugin_config_parent_dir(self):
+        if self.plugin_slug is None:
+            raise ValueError(
+                '{} must define a plugin_slug class attribute'.format(type(self).__name__)
+            )
         return os.path.join(
             datakit.utils.home_dir(),
             'plugins',

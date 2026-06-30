@@ -21,7 +21,7 @@ classifiers = [
     "Environment :: Console",
 ]
 dependencies = [
-    "cliff",
+    "cliff>=4,<5",
 ]
 
 [project.urls]

@@ -20,10 +20,6 @@ def mkdir_p(path):
             raise
 
 
-def makedirs(basepath, dirs=[]):
-    return [mkdir_p(os.path.join(basepath, pth)) for pth in dirs]
-
-
 def read_json(path):
     with open(path) as fh:
         return json.load(fh)
