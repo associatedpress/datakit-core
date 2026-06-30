@@ -1,4 +1,5 @@
-.PHONY: clean-pyc clean-build docs clean
+.PHONY: clean clean-test clean-pyc clean-build docs help lint test test-all coverage dist install check-release
+.DEFAULT_GOAL := help
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
 try:
@@ -20,13 +21,13 @@ for line in sys.stdin:
 		print("%-20s %s" % (target, help))
 endef
 export PRINT_HELP_PYSCRIPT
-
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+
 
 clean-build: ## remove build artifacts
 	rm -fr build/
@@ -46,42 +47,44 @@ clean-test: ## remove test and coverage artifacts
 	rm -f .coverage
 	rm -fr htmlcov/
 
-lint: ## check style with flake8
-	flake8 datakit tests
+lint: ## check style with ruff
+	uv run ruff check datakit tests
 
 test: ## run tests quickly with the default Python
-	py.test
+	uv run pytest
 
-test-all: ## run tests on every Python version with tox
-	tox
+test-all: ## run tests on the py310-py313 tox matrix
+	uv run tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source datakit setup.py test
-	coverage report -m
-	coverage html
+	uv run coverage run --source datakit -m pytest
+	uv run coverage report -m
+	uv run coverage html
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/datakit.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -T -o docs/ datakit
+	uv run sphinx-apidoc -o docs/ datakit
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
 servedocs: docs ## compile the docs watching for changes
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
+	uv run watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
+
+check-release: dist ## check release for potential errors
+	uv publish --dry-run dist/*
 
 test-release: clean dist ## release distros to test.pypi.org
-	twine upload -r testpypi dist/*
+	uv publish --publish-url https://test.pypi.org/legacy/ dist/*
 
 release: clean dist ## package and upload a release
-	twine upload -r pypi dist/*
+	uv publish dist/*
 
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+	uv build
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	uv pip install .

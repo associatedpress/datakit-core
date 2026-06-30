@@ -1,0 +1,65 @@
+[build-system]
+requires = ["uv-build>=0.8.18,<0.9.0"]
+build-backend = "uv_build"
+
+[project]
+name = "datakit-core"
+version = "0.3.2"
+description = "A pluggable command-line tool for custom data science workflows."
+authors = [
+    {name = "Larry Fenn", email = "lfenn@ap.org"},
+]
+license = {text = "ISC"}
+keywords = ["datakit"]
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: ISC License (ISCL)",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Environment :: Console",
+]
+dependencies = [
+    "cliff",
+]
+
+[project.urls]
+Homepage = "https://github.com/associatedpress/datakit-core"
+
+[project.scripts]
+datakit = "datakit.main:main"
+
+[project.entry-points."datakit.plugins"]
+
+[dependency-groups]
+dev = [
+    "bumpversion",
+    "coverage",
+    "ruff",
+    "pytest",
+    "pytest-mock",
+    "Sphinx",
+    "tox",
+    "tox-uv",
+    "watchdog",
+]
+
+[tool.uv.build-backend]
+module-name = "datakit"
+module-root = ""
+
+[tool.tox]
+env_list = ["py310", "py311", "py312", "py313"]
+
+[tool.tox.env_run_base]
+dependency_groups = ["dev"]
+commands = [["pytest", "{posargs}"]]
+
+[tool.ruff]
+line-length = 130
+exclude = ["docs", "datakit/__init__.py"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/"]
+log_level = "INFO"
