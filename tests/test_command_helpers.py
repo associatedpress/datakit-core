@@ -92,3 +92,13 @@ def test_configs_with_file(tmpdir):
     create_plugin_config(tmpdir.strpath, 'datakit-test-plugin', {'foo': 'bar'})
     cmd = FakeCommand(FakeApp(), None, cmd_name='my_plugin fake_command')
     assert cmd.configs == {'foo': 'bar'}
+
+
+def test_plugin_config_parent_dir_requires_plugin_slug():
+    class NoSlugCommand(CommandHelpers, Command):
+        def take_action(self, parsed_args):
+            print("command invoked")
+
+    cmd = NoSlugCommand(FakeApp(), None, cmd_name='my_plugin fake_command')
+    with pytest.raises(ValueError):
+        cmd.plugin_config_parent_dir

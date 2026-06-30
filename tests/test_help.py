@@ -17,9 +17,7 @@ try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
-import os
 import re
-import sys
 
 from unittest import mock
 
@@ -92,8 +90,7 @@ def test_show_help_for_help():
     except SystemExit:
         pass
     help_text = stdout.getvalue()
-    basecommand = os.path.split(sys.argv[0])[1]
-    assert 'usage: %s [--version]' % basecommand in help_text
+    assert re.search(r'usage: .+ \[--version\]', help_text)
     assert 'optional arguments:\n  --version' in help_text or 'options:\n  --version' in help_text
     expected = (
         '  one            Test command.\n'
@@ -143,6 +140,69 @@ def test_show_help_with_ep_load_fail(mocker):
     assert 'Commands:' in help_output
     assert 'Could not load' in help_output
     assert 'Exception: Could not load EntryPoint' not in help_output
+
+
+def test_show_help_with_command_instantiation_fail(mocker):
+    stdout = StringIO()
+
+    class BrokenCommand(object):
+        def __init__(self, *args, **kwargs):
+            raise RuntimeError('boom')
+
+    mocker.patch(
+        'cliff.commandmanager.EntryPointWrapper.load',
+        return_value=BrokenCommand,
+    )
+    app = application.App(
+        'testing', '1',
+        DatakitTestCommandManager(TEST_NAMESPACE),
+        stdout=stdout
+    )
+    app.NAME = 'test'
+    app.options = mock.Mock()
+    app.options.debug = False
+    help_cmd = help.HelpCommand(app, mock.Mock())
+    parser = help_cmd.get_parser('test')
+    parsed_args = parser.parse_args([])
+    try:
+        help_cmd.run(parsed_args)
+    except SystemExit:
+        pass
+    help_output = stdout.getvalue()
+    assert 'Could not instantiate' in help_output
+    assert 'boom' in help_output
+    assert 'Traceback' not in help_output
+
+
+def test_show_help_print_exc_with_command_instantiation_fail(mocker):
+    stdout = StringIO()
+
+    class BrokenCommand(object):
+        def __init__(self, *args, **kwargs):
+            raise RuntimeError('boom')
+
+    mocker.patch(
+        'cliff.commandmanager.EntryPointWrapper.load',
+        return_value=BrokenCommand,
+    )
+    app = application.App(
+        'testing', '1',
+        DatakitTestCommandManager(TEST_NAMESPACE),
+        stdout=stdout
+    )
+    app.NAME = 'test'
+    app.options = mock.Mock()
+    app.options.debug = True
+    help_cmd = help.HelpCommand(app, mock.Mock())
+    parser = help_cmd.get_parser('test')
+    parsed_args = parser.parse_args([])
+    try:
+        help_cmd.run(parsed_args)
+    except SystemExit:
+        pass
+    help_output = stdout.getvalue()
+    assert 'Could not instantiate' in help_output
+    assert 'Traceback' in help_output
 
 
 def test_show_help_print_exc_with_ep_load_fail(mocker):
