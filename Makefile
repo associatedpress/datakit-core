@@ -1,4 +1,4 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help lint test test-all coverage dist install check-release
+.PHONY: clean clean-test clean-pyc clean-build docs help lint test test-all coverage dist install check-release bump-major bump-minor bump-patch
 .DEFAULT_GOAL := help
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
@@ -88,3 +88,21 @@ dist: clean ## builds source and wheel package
 
 install: clean ## install the package to the active Python's site-packages
 	uv pip install .
+
+bump-major: ## bump the major version, refresh uv.lock, commit, and tag
+	@$(MAKE) _bump PART=major
+
+bump-minor: ## bump the minor version, refresh uv.lock, commit, and tag
+	@$(MAKE) _bump PART=minor
+
+bump-patch: ## bump the patch version, refresh uv.lock, commit, and tag
+	@$(MAKE) _bump PART=patch
+
+_bump:
+	@old=$$(grep -m1 '^current_version' setup.cfg | cut -d'=' -f2 | tr -d ' '); \
+	uv run bumpversion $(PART) --no-commit --no-tag; \
+	new=$$(grep -m1 '^current_version' setup.cfg | cut -d'=' -f2 | tr -d ' '); \
+	uv lock; \
+	git add setup.cfg pyproject.toml datakit/__init__.py uv.lock; \
+	git commit -m "Bump version: $$old → $$new"; \
+	git tag "v$$new"
