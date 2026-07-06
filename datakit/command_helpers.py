@@ -5,6 +5,7 @@ from typing import Any, Optional
 
 import datakit.utils
 
+from .config import ConfigField
 from .utils import read_json, write_json
 
 
@@ -49,6 +50,12 @@ class CommandHelpers:
 
     log = logging.getLogger(__name__)
     plugin_slug: Optional[str] = None
+
+    #: Declarative description of this plugin's config surface. Override in a
+    #: subclass with a list of :class:`datakit.ConfigField` to participate in the
+    #: generic ``datakit config`` command. Additive: plugins that leave it empty
+    #: keep working unchanged.
+    config_spec: list[ConfigField] = []
 
     def update_configs(self, new_configs: dict[str, Any]) -> dict[str, Any]:
         configs = self.configs

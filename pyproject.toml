@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "datakit-core"
-version = "0.4.0"
+version = "0.5.0"
 description = "A pluggable command-line tool for custom data science workflows."
 authors = [
     {name = "Larry Fenn", email = "lfenn@ap.org"},
@@ -31,6 +31,11 @@ Homepage = "https://github.com/associatedpress/datakit-core"
 datakit = "datakit.main:main"
 
 [project.entry-points."datakit.plugins"]
+"config list" = "datakit.commands.config:ConfigList"
+"config status" = "datakit.commands.config:ConfigStatus"
+"config set" = "datakit.commands.config:ConfigSet"
+"config verify" = "datakit.commands.config:ConfigVerify"
+"config init" = "datakit.commands.config:ConfigInit"
 
 [dependency-groups]
 dev = [
