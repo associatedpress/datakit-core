@@ -99,10 +99,10 @@ bump-patch: ## bump the patch version, refresh uv.lock, commit, and tag
 	@$(MAKE) _bump PART=patch
 
 _bump:
-	@old=$$(grep -m1 '^current_version' setup.cfg | cut -d'=' -f2 | tr -d ' '); \
-	uv run bumpversion $(PART) --no-commit --no-tag; \
-	new=$$(grep -m1 '^current_version' setup.cfg | cut -d'=' -f2 | tr -d ' '); \
-	uv lock; \
-	git add setup.cfg pyproject.toml datakit/__init__.py uv.lock; \
-	git commit -m "Bump version: $$old → $$new"; \
+	@old=$$(grep -m1 '^current_version' setup.cfg | cut -d'=' -f2 | tr -d ' ') && \
+	uv run bumpversion $(PART) --no-commit --no-tag --allow-dirty && \
+	new=$$(grep -m1 '^current_version' setup.cfg | cut -d'=' -f2 | tr -d ' ') && \
+	uv lock && \
+	git add setup.cfg pyproject.toml datakit/__init__.py uv.lock && \
+	git commit -m "Bump version: $$old → $$new" && \
 	git tag "v$$new"
