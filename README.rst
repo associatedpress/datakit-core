@@ -31,9 +31,23 @@ own plugins (see :ref:`creating-plugins`).
 Installation
 ============
 
-For a system-wide install, from the command line::
+Datakit is distributed as a command-line tool. The recommended way to install
+it is with uv_, which installs the ``datakit`` command into its own isolated
+environment::
 
-    $ sudo pip install datakit-core
+    $ uv tool install datakit-core
+
+Plugins must live in the same environment as ``datakit`` so it can discover
+them. Install them alongside core with ``--with``::
+
+    $ uv tool install datakit-core --with datakit-project
+
+To add a plugin to an existing install, re-run the command with the plugins you
+want (uv will update the tool in place)::
+
+    $ uv tool install datakit-core --with datakit-project --with datakit-data
+
+If you don't have uv, see its `installation docs <https://docs.astral.sh/uv/getting-started/installation/>`_.
 
 Usage
 =====
@@ -48,9 +62,9 @@ To see which commands plugins provide, try the ``--help`` flag::
 Example: datakit-project
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Install datakit-project::
+Install ``datakit-project`` alongside core::
 
-    $ pip install datakit-project
+    $ uv tool install datakit-core --with datakit-project
 
 The plugin provides a ``project create`` command. You need to specify a Cookiecutter_ template to use this command, for example the AP's R template:
 
@@ -58,14 +72,49 @@ The plugin provides a ``project create`` command. You need to specify a Cookiecu
 
 That's the basic recipe for working with plugins: install, explore, and invoke! [1]_
 
+Configuration
+=============
+
+Many plugins need configuration to work — API tokens, bucket names, default
+paths, and the like. Datakit ships a generic ``config`` command family that
+reads each installed plugin's declared configuration schema, so you use the
+same commands no matter which plugin you're setting up. Configuration is stored
+per plugin under ``~/.datakit/plugins/<plugin>/config.json``.
+
+List every plugin's configuration and whether each value is set::
+
+    $ datakit config list
+
+``datakit config status`` is an alias for ``list``.
+
+Interactively fill in any unset values (secrets are entered hidden). Pass a
+plugin slug to limit it to one plugin::
+
+    $ datakit config init
+    $ datakit config init datakit-github
+
+Set a single value. Omit the value to be prompted for it (hidden, if the field
+is a secret)::
+
+    $ datakit config set datakit-github github_api_key
+    $ datakit config set datakit-project default_template gh:associatedpress/cookiecutter-r-project
+
+Verify that configured values actually work — plugins can attach validators that
+check a token authenticates or a bucket is reachable. A non-zero exit status
+signals a failure, so this is handy in scripts::
+
+    $ datakit config verify
+    $ datakit config verify datakit-github
+
 Credits
----------
+=======
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
 .. [1] Plugins may also provide more robust docs, so don't forget to check those out when available.
 
 .. _our plugins on Github: https://github.com/search?q=topic%3Adatakit-cli+org%3Aassociatedpress&type=Repositories
+.. _uv: https://docs.astral.sh/uv/
 .. _Cliff: http://docs.openstack.org/developer/cliff/index.html
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _datakit-project: http://datakit-project.readthedocs.io/en/latest/

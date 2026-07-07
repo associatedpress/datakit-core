@@ -1,6 +1,14 @@
 datakit package
 ===============
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   datakit.commands
+
 Submodules
 ----------
 
@@ -8,6 +16,14 @@ datakit.command\_helpers module
 -------------------------------
 
 .. automodule:: datakit.command_helpers
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+datakit.config module
+---------------------
+
+.. automodule:: datakit.config
    :members:
    :show-inheritance:
    :undoc-members:
