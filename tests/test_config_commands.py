@@ -58,6 +58,24 @@ def run(command_cls, argv, app):
     return app.stdout.getvalue(), result
 
 
+# --- prompt plumbing ------------------------------------------------------
+
+def test_prompt_wraps_builtin_input(monkeypatch):
+    monkeypatch.setattr('builtins.input', lambda msg: f'echo:{msg}')
+    assert config_cmds.prompt('name? ') == 'echo:name? '
+
+
+def test_prompt_secret_wraps_getpass(monkeypatch):
+    monkeypatch.setattr('getpass.getpass', lambda msg: f'hidden:{msg}')
+    assert config_cmds.prompt_secret('token? ') == 'hidden:token? '
+
+
+def test_prompt_field_falls_back_to_default_when_blank(monkeypatch):
+    monkeypatch.setattr(config_cmds, 'prompt', lambda msg: '')
+    field = ConfigField('region', default='us-east-1')
+    assert config_cmds._prompt_field(field) == 'us-east-1'
+
+
 # --- list -----------------------------------------------------------------
 
 def test_list_shows_missing_and_masks(tmpdir):
@@ -157,6 +175,40 @@ def test_verify_runs_validator(tmpdir, monkeypatch):
     assert 'OK' in out
 
 
+def test_verify_set_without_validator_reports_set(tmpdir):
+    create_plugin_config(tmpdir.strpath, 'datakit-github',
+                         {'github_api_key': 'tok', 'org': 'ap'})
+    out, _ = run(config_cmds.ConfigVerify, [], make_app())
+    assert 'org: set' in out
+
+
+def test_verify_failed_validator_reports_message_and_exits(tmpdir):
+    class ValidatedCmd:
+        plugin_slug = 'datakit-val'
+        config_spec = [
+            ConfigField('endpoint', required=True,
+                        validator=lambda v: (False, 'unreachable')),
+        ]
+
+    create_plugin_config(tmpdir.strpath, 'datakit-val', {'endpoint': 'http://x'})
+    app = FakeApp([('val cmd', FakeEntryPoint(ValidatedCmd))])
+    with pytest.raises(SystemExit):
+        run(config_cmds.ConfigVerify, ['datakit-val'], app)
+    assert 'FAILED (unreachable)' in app.stdout.getvalue()
+
+
+def test_verify_single_plugin_filter(tmpdir):
+    create_plugin_config(tmpdir.strpath, 'datakit-github',
+                         {'github_api_key': 'tok'})
+    out, _ = run(config_cmds.ConfigVerify, ['datakit-github'], make_app())
+    assert 'datakit-github' in out
+
+
+def test_verify_unknown_plugin_exits():
+    with pytest.raises(SystemExit):
+        run(config_cmds.ConfigVerify, ['nope'], make_app())
+
+
 # --- init -----------------------------------------------------------------
 
 def test_init_prompts_unset_fields(monkeypatch):
@@ -179,3 +231,30 @@ def test_init_reprompts_required_when_blank(monkeypatch):
     saved = PluginConfig('datakit-github').read()
     assert saved['github_api_key'] == 'finally'
     assert 'org' not in saved  # optional + blank stays unset
+
+
+def test_init_single_plugin_filter(monkeypatch):
+    monkeypatch.setattr(config_cmds, 'prompt', lambda msg: 'ap')
+    monkeypatch.setattr(config_cmds, 'prompt_secret', lambda msg: 'tok')
+    app = make_app()
+    run(config_cmds.ConfigInit, ['datakit-github'], app)
+    assert PluginConfig('datakit-github').read() == {'github_api_key': 'tok',
+                                                     'org': 'ap'}
+
+
+def test_init_unknown_plugin_exits():
+    with pytest.raises(SystemExit):
+        run(config_cmds.ConfigInit, ['nope'], make_app())
+
+
+def test_init_skips_fully_configured_plugin(tmpdir, monkeypatch):
+    create_plugin_config(tmpdir.strpath, 'datakit-github',
+                         {'github_api_key': 'tok', 'org': 'ap'})
+
+    def refuse(msg):
+        raise AssertionError('should not prompt when everything is set')
+
+    monkeypatch.setattr(config_cmds, 'prompt', refuse)
+    monkeypatch.setattr(config_cmds, 'prompt_secret', refuse)
+    out, _ = run(config_cmds.ConfigInit, [], make_app())
+    assert out == ''

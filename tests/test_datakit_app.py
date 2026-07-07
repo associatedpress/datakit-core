@@ -1,4 +1,8 @@
+import runpy
+import sys
 from unittest import mock
+
+import pytest
 
 from datakit.datakit_app import Datakit
 from datakit.main import main as dk_main
@@ -24,6 +28,18 @@ def test_main_reads_argv_from_sys_when_none_given(mocker, capsys):
     out, err = capsys.readouterr()
     assert 'You must invoke a command' in out
     assert result == 1
+
+
+def test_run_as_script_exits_with_main_return_code(mocker):
+    """Executing `python -m datakit.main` should propagate main()'s code."""
+    mocker.patch('sys.argv', ['datakit'])
+    # Drop the already-imported module so runpy executes it fresh as __main__
+    # without warning about a stale sys.modules entry.
+    mocker.patch.dict(sys.modules)
+    del sys.modules['datakit.main']
+    with pytest.raises(SystemExit) as excinfo:
+        runpy.run_module('datakit.main', run_name='__main__')
+    assert excinfo.value.code == 1
 
 
 def test_main_dispatches_to_app_run(mocker):
