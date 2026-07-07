@@ -95,6 +95,34 @@ def test_set_secret_prompts_and_masks(monkeypatch):
     assert '********' in out
 
 
+def test_set_secret_dedupes_double_paste(monkeypatch):
+    class GitlabCmd:
+        plugin_slug = 'datakit-gitlab'
+        config_spec = [
+            ConfigField('api_key', required=True, secret=True,
+                        dedupe_prefix='glpat-', help='GitLab token'),
+        ]
+
+    # Terminal concatenates a token pasted twice into one line.
+    monkeypatch.setattr(config_cmds, 'prompt_secret',
+                        lambda msg: 'glpat-abc123glpat-abc123')
+    app = FakeApp([('gitlab integrate', FakeEntryPoint(GitlabCmd))])
+    run(config_cmds.ConfigSet, ['datakit-gitlab', 'api_key'], app)
+    assert PluginConfig('datakit-gitlab').read()['api_key'] == 'glpat-abc123'
+
+
+def test_dedupe_paste_variants():
+    d = config_cmds._dedupe_paste
+    # single paste is untouched
+    assert d('glpat-abc123', 'glpat-') == 'glpat-abc123'
+    # triple paste collapses to first token
+    assert d('glpat-Xglpat-Xglpat-X', 'glpat-') == 'glpat-X'
+    # whitespace/newline between pastes is trimmed off
+    assert d('glpat-X\nglpat-X', 'glpat-') == 'glpat-X'
+    # value not starting with the prefix is left alone
+    assert d('sometoken', 'glpat-') == 'sometoken'
+
+
 def test_set_unknown_plugin_exits():
     with pytest.raises(SystemExit):
         run(config_cmds.ConfigSet, ['nope', 'k', 'v'], make_app())

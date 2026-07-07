@@ -26,12 +26,32 @@ def prompt_secret(message: str) -> str:
     return getpass.getpass(message)
 
 
+def _dedupe_paste(value: str, prefix: str) -> str:
+    """Collapse an accidental repeated paste of a prefixed token.
+
+    Pasting the same token twice (or more) into a prompt with no newline in
+    between yields e.g. ``glpat-XXXglpat-XXX``. When ``value`` begins with
+    ``prefix`` and ``prefix`` occurs again further in, everything from the
+    second occurrence on is dropped, leaving a single clean token. A token
+    whose body legitimately contains the prefix is not expected for the tokens
+    this guards (e.g. GitLab PATs), so this is safe.
+    """
+    if not prefix or not value.startswith(prefix):
+        return value
+    second = value.find(prefix, len(prefix))
+    if second == -1:
+        return value
+    return value[:second].strip()
+
+
 def _prompt_field(field: ConfigField) -> str:
     """Prompt once for a field, using getpass for secrets and showing default."""
     label = field.help or field.name
     suffix = f" [{field.default}]" if field.default not in (None, "") else ""
     message = f"  {label}{suffix}: "
     value = (prompt_secret(message) if field.secret else prompt(message)).strip()
+    if field.dedupe_prefix:
+        value = _dedupe_paste(value, field.dedupe_prefix)
     if not value and field.default not in (None, ""):
         return str(field.default)
     return value

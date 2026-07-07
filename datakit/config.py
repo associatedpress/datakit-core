@@ -35,6 +35,10 @@ class ConfigField:
         by ``datakit config verify`` to check the value actually works (e.g.
         reach an S3 bucket, hit an API). May raise; exceptions are treated as a
         failed check.
+    :param dedupe_prefix: if set, a known token prefix (e.g. ``glpat-``) used to
+        collapse accidental repeated pastes at the prompt. Terminals concatenate
+        a value pasted twice into one line, so ``glpat-XXXglpat-XXX`` is trimmed
+        back to the first ``glpat-XXX``. See :func:`datakit.commands.config`.
     """
 
     name: str
@@ -43,6 +47,7 @@ class ConfigField:
     help: str = ""
     default: Any = None
     validator: Optional[Callable[[Any], Any]] = None
+    dedupe_prefix: Optional[str] = None
 
     def is_set(self, value: Any) -> bool:
         return value is not None and value != ""
