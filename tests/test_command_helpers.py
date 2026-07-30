@@ -1,7 +1,7 @@
 import os
 
-from cliff.command import Command
 import pytest
+from cliff.command import Command
 
 from datakit import CommandHelpers
 from datakit.utils import mkdir_p, read_json
@@ -63,7 +63,7 @@ def test_plugin_config_parent_dir_requires_plugin_slug(command):
         plugin_slug = None
 
     with pytest.raises(ValueError):
-        command(NoSlugCommand).plugin_config_parent_dir
+        _ = command(NoSlugCommand).plugin_config_parent_dir
 
 
 def test_default_configs_empty_unless_overridden(command):

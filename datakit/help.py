@@ -17,7 +17,8 @@ import argparse
 import inspect
 import sys
 import traceback
-from typing import Any, Optional, Sequence, Union
+from collections.abc import Sequence
+from typing import Any
 
 from cliff import command
 
@@ -35,8 +36,8 @@ class HelpAction(argparse.Action):
         self,
         parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
-        values: Union[str, Sequence[Any], None],
-        option_string: Optional[str] = None,
+        values: str | Sequence[Any] | None,
+        option_string: str | None = None,
     ) -> None:
         self.app = self.default
         parser.print_help(self.app.stdout)
@@ -64,14 +65,14 @@ class HelpAction(argparse.Action):
         ep: Any,
         parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
-        values: Union[str, Sequence[Any], None],
-        option_string: Optional[str] = None,
+        values: str | Sequence[Any] | None,
+        option_string: str | None = None,
     ) -> None:
         name = ep.name
         try:
             factory = ep.load()
-        except Exception:
-            self.app.stdout.write('Could not load %r\n' % ep)
+        except Exception:  # noqa: BLE001 - third-party entry points may raise arbitrary exceptions
+            self.app.stdout.write(f'Could not load {ep!r}\n')
             if namespace.debug:
                 traceback.print_exc(file=self.app.stdout)
             return
@@ -82,8 +83,8 @@ class HelpAction(argparse.Action):
             cmd = factory(self.app, None, **kwargs)
             if cmd.deprecated:
                 return
-        except Exception as err:
-            self.app.stdout.write('Could not instantiate %r: %s\n' % (ep, err))
+        except Exception as err:  # noqa: BLE001 - third-party commands may raise arbitrary exceptions
+            self.app.stdout.write(f'Could not instantiate {ep!r}: {err}\n')
             if namespace.debug:
                 traceback.print_exc(file=self.app.stdout)
             return
@@ -92,10 +93,10 @@ class HelpAction(argparse.Action):
 
     def _log_header(self, dist_name: str) -> None:
         underline = "-" * len(dist_name)
-        self.app.stdout.write('\n%s\n%s\n' % (dist_name, underline))
+        self.app.stdout.write(f'\n{dist_name}\n{underline}\n')
 
     def _log_cmd(self, name: str, one_liner: str) -> None:
-        self.app.stdout.write('  %-13s  %s\n' % (name, one_liner))
+        self.app.stdout.write(f'  {name:<13}  {one_liner}\n')
 
 
 class HelpCommand(command.Command):
@@ -103,7 +104,7 @@ class HelpCommand(command.Command):
     """
 
     def get_parser(self, prog_name: str) -> argparse.ArgumentParser:
-        parser = super(HelpCommand, self).get_parser(prog_name)
+        parser = super().get_parser(prog_name)
         parser.add_argument('cmd',
                             nargs='*',
                             help='name of the command',
@@ -125,9 +126,9 @@ class HelpCommand(command.Command):
                                  ]
                 if not fuzzy_matches:
                     raise
-                self.app.stdout.write('Command "%s" matches:\n' % cmd)
+                self.app.stdout.write(f'Command "{cmd}" matches:\n')
                 for fm in sorted(fuzzy_matches):
-                    self.app.stdout.write('  %s\n' % fm)
+                    self.app.stdout.write(f'  {fm}\n')
                 return
             self.app_args.cmd = search_args
             kwargs = {}
@@ -136,7 +137,7 @@ class HelpCommand(command.Command):
             cmd = cmd_factory(self.app, self.app_args, **kwargs)
             full_name = (cmd_name
                          if self.app.interactive_mode
-                         else ' '.join([self.app.NAME, cmd_name])
+                         else f'{self.app.NAME} {cmd_name}'
                          )
             cmd_parser = cmd.get_parser(full_name)
             cmd_parser.print_help(self.app.stdout)

@@ -5,7 +5,6 @@ These commands drive every installed plugin's declarative ``config_spec`` (see
 ``datakit.plugins`` entry-point group rather than hardcoding any plugin.
 """
 import getpass
-from typing import Optional
 
 from cliff.command import Command
 
@@ -177,7 +176,7 @@ class ConfigVerify(_ConfigCommand):
         if failures:
             raise SystemExit(1)
 
-    def _selected(self, plugin: Optional[str]) -> dict[str, PluginConfig]:
+    def _selected(self, plugin: str | None) -> dict[str, PluginConfig]:
         plugins = self.discover()
         if plugin is None:
             return plugins

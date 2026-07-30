@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from typing import Any, Optional
+from typing import Any, ClassVar
 
 import datakit.utils
 
@@ -49,13 +49,13 @@ class CommandHelpers:
     """
 
     log = logging.getLogger(__name__)
-    plugin_slug: Optional[str] = None
+    plugin_slug: str | None = None
 
     #: Declarative description of this plugin's config surface. Override in a
     #: subclass with a list of :class:`datakit.ConfigField` to participate in the
     #: generic ``datakit config`` command. Additive: plugins that leave it empty
     #: keep working unchanged.
-    config_spec: list[ConfigField] = []
+    config_spec: ClassVar[list[ConfigField]] = []
 
     def update_configs(self, new_configs: dict[str, Any]) -> dict[str, Any]:
         configs = self.configs
@@ -80,7 +80,7 @@ class CommandHelpers:
     def plugin_config_parent_dir(self) -> str:
         if self.plugin_slug is None:
             raise ValueError(
-                '{} must define a plugin_slug class attribute'.format(type(self).__name__)
+                f'{type(self).__name__} must define a plugin_slug class attribute'
             )
         return os.path.join(
             datakit.utils.home_dir(),

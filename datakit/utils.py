@@ -36,7 +36,7 @@ def dist_for_obj(obj: Any) -> str:
         dist = obj.dist.name
         version = obj.dist.version
         if version:
-            dist += " ({})".format(version)
+            dist += f" ({version})"
         return dist
     except AttributeError:
         # Raised for Cliff, which returns an

@@ -8,11 +8,15 @@ initializing the on-disk config without core needing to know about any specific
 plugin.
 """
 import json
+import logging
 import os
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, Optional
+from typing import Any
 
 from .utils import home_dir, mkdir_p, read_json, write_json
+
+log = logging.getLogger(__name__)
 
 MASK = "********"
 
@@ -46,8 +50,8 @@ class ConfigField:
     secret: bool = False
     help: str = ""
     default: Any = None
-    validator: Optional[Callable[[Any], Any]] = None
-    dedupe_prefix: Optional[str] = None
+    validator: Callable[[Any], Any] | None = None
+    dedupe_prefix: str | None = None
 
     def is_set(self, value: Any) -> bool:
         return value is not None and value != ""
@@ -57,7 +61,7 @@ class ConfigField:
             return SET
         return MISSING if self.required else UNSET
 
-    def display(self, value: Any) -> Optional[str]:
+    def display(self, value: Any) -> str | None:
         """Value as it should be shown to a human (secrets masked)."""
         if not self.is_set(value):
             return None
@@ -75,7 +79,7 @@ class PluginConfig:
     plugin.
     """
 
-    def __init__(self, slug: str, spec: Optional[list[ConfigField]] = None) -> None:
+    def __init__(self, slug: str, spec: list[ConfigField] | None = None) -> None:
         self.slug = slug
         self.spec: list[ConfigField] = list(spec) if spec else []
 
@@ -103,7 +107,7 @@ class PluginConfig:
         self.write(configs)
         return configs
 
-    def field(self, name: str) -> Optional[ConfigField]:
+    def field(self, name: str) -> ConfigField | None:
         for f in self.spec:
             if f.name == name:
                 return f
@@ -137,6 +141,7 @@ def discover_plugin_configs(command_manager: Any) -> dict[str, PluginConfig]:
         try:
             cls = ep.load()
         except Exception:
+            log.debug("Could not load plugin entry point %r", ep, exc_info=True)
             continue
         slug = getattr(cls, "plugin_slug", None)
         spec = getattr(cls, "config_spec", None)
@@ -155,7 +160,7 @@ def run_validator(field: ConfigField, value: Any) -> tuple[bool, str]:
         return True, ""
     try:
         result = field.validator(value)
-    except Exception as err:  # a validator that raises is a failed check
+    except Exception as err:  # noqa: BLE001 - validators may raise arbitrary exceptions
         return False, str(err)
     if isinstance(result, tuple):
         ok, message = (result + ("",))[:2]

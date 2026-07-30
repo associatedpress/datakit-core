@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import pytest
 
 from datakit.config import (
@@ -95,15 +97,20 @@ class FakeCommandManager:
 def test_discover_groups_and_skips():
     class GithubCmd:
         plugin_slug = 'datakit-github'
-        config_spec = [ConfigField('github_api_key', required=True, secret=True)]
+        config_spec: ClassVar[list[ConfigField]] = [
+            ConfigField('github_api_key', required=True, secret=True),
+        ]
 
     class GithubOther:
         plugin_slug = 'datakit-github'
-        config_spec = [ConfigField('github_api_key'), ConfigField('org')]
+        config_spec: ClassVar[list[ConfigField]] = [
+            ConfigField('github_api_key'),
+            ConfigField('org'),
+        ]
 
     class NoSpec:
         plugin_slug = 'datakit-nope'
-        config_spec = []
+        config_spec: ClassVar[list[ConfigField]] = []
 
     cm = FakeCommandManager([
         ('github integrate', FakeEntryPoint(GithubCmd)),

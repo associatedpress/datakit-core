@@ -18,14 +18,14 @@ try:
 except ImportError:
     from io import StringIO
 import re
-
 from unittest import mock
 
-from cliff import app as application
 import pytest
+from cliff import app as application
+
+from datakit import help
 
 from .utils import TEST_NAMESPACE, DatakitTestCommandManager
-from datakit import help
 
 
 def test_show_help_for_command():
@@ -145,7 +145,7 @@ def test_show_help_with_ep_load_fail(mocker):
 def test_show_help_with_command_instantiation_fail(mocker):
     stdout = StringIO()
 
-    class BrokenCommand(object):
+    class BrokenCommand:
         def __init__(self, *args, **kwargs):
             raise RuntimeError('boom')
 
@@ -177,7 +177,7 @@ def test_show_help_with_command_instantiation_fail(mocker):
 def test_show_help_print_exc_with_command_instantiation_fail(mocker):
     stdout = StringIO()
 
-    class BrokenCommand(object):
+    class BrokenCommand:
         def __init__(self, *args, **kwargs):
             raise RuntimeError('boom')
 

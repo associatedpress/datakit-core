@@ -1,4 +1,5 @@
 import io
+from typing import ClassVar
 
 import pytest
 
@@ -39,7 +40,7 @@ class FakeApp:
 
 class GithubCmd:
     plugin_slug = 'datakit-github'
-    config_spec = [
+    config_spec: ClassVar[list[ConfigField]] = [
         ConfigField('github_api_key', required=True, secret=True,
                     help='GitHub token'),
         ConfigField('org', help='Default org'),
@@ -116,7 +117,7 @@ def test_set_secret_prompts_and_masks(monkeypatch):
 def test_set_secret_dedupes_double_paste(monkeypatch):
     class GitlabCmd:
         plugin_slug = 'datakit-gitlab'
-        config_spec = [
+        config_spec: ClassVar[list[ConfigField]] = [
             ConfigField('api_key', required=True, secret=True,
                         dedupe_prefix='glpat-', help='GitLab token'),
         ]
@@ -163,7 +164,7 @@ def test_verify_runs_validator(tmpdir, monkeypatch):
 
     class ValidatedCmd:
         plugin_slug = 'datakit-val'
-        config_spec = [
+        config_spec: ClassVar[list[ConfigField]] = [
             ConfigField('endpoint', required=True,
                         validator=lambda v: checked.append(v) or True),
         ]
@@ -185,7 +186,7 @@ def test_verify_set_without_validator_reports_set(tmpdir):
 def test_verify_failed_validator_reports_message_and_exits(tmpdir):
     class ValidatedCmd:
         plugin_slug = 'datakit-val'
-        config_spec = [
+        config_spec: ClassVar[list[ConfigField]] = [
             ConfigField('endpoint', required=True,
                         validator=lambda v: (False, 'unreachable')),
         ]

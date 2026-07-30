@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from cliff import _argparse
 from cliff.app import App
@@ -9,14 +9,14 @@ from datakit import help
 class Datakit(App):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super(Datakit, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.command_manager.add_command('help', help.HelpCommand)
 
     def build_option_parser(
         self,
         description: str,
         version: str,
-        argparse_kwargs: Optional[dict[str, Any]] = None,
+        argparse_kwargs: dict[str, Any] | None = None,
     ) -> _argparse.ArgumentParser:
         """Return an argparse option parser for this application.
         Subclasses may override this method to extend
@@ -38,7 +38,7 @@ class Datakit(App):
         parser.add_argument(
             '--version',
             action='version',
-            version='%(prog)s {0}'.format(version),
+            version=f'%(prog)s {version}',
         )
         verbose_group = parser.add_mutually_exclusive_group()
         verbose_group.add_argument(
